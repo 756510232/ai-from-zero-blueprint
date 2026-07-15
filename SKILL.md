@@ -1,6 +1,6 @@
 ---
 name: ai-from-zero-blueprint
-description: 当用户想从零做一个"领域陌生 + AI 可辅助实现"的应用，但完全不懂该领域、也没有预设终点时调用。先借 brainstorming 与用户确认真实产品目标，再用固化模板主动完成"侦察→拆解→建造"：三层同构骨架 + 四铁律 + 标准 phase 顺序（每 phase 四要素：约束目标/完成标准/风险/检测方法）。经 17 个真实开源项目（已逐源码核实）验证，让外行也能复现出稳健、可验证、可溯源、"拔掉 LLM 内核仍独立成立"的优秀项目。触发词：从零做一个 AI 应用、不懂这个领域怎么靠 AI 做、怎么跟 AI 一步步沟通、这个项目一共多少步、AI 帮我搭 XXX 系统、如何验证 AI 做的对不对、用这套方法从零做一个 XXX。
+description: 当用户想从零做一个"领域陌生 + AI 可辅助实现"的应用，但完全不懂该领域、也没有预设终点时调用。先借 brainstorming 与用户确认真实产品目标，再用固化模板主动完成"侦察→拆解→建造"：三层同构骨架 + 四铁律 + 标准 phase 顺序（每 phase 四要素：约束目标/完成标准/风险/检测方法）。经 39 个真实开源项目（已逐源码核实）验证，让外行也能复现出稳健、可验证、可溯源、"拔掉 LLM 内核仍独立成立"的优秀项目。触发词：从零做一个 AI 应用、不懂这个领域怎么靠 AI 做、怎么跟 AI 一步步沟通、这个项目一共多少步、AI 帮我搭 XXX 系统、如何验证 AI 做的对不对、用这套方法从零做一个 XXX。
 ---
 
 # 从零搭建领域陌生型 AI 应用：蓝图方法论
@@ -120,6 +120,9 @@ AI **主动套用**模板 §4 的固定 6 个 phase（P1 Schema → P2 最小内
 - 🚩 降级行被算成正常结论（伪装成推荐）——降级必须是独立显式状态
 - 🚩 跨文件字段名漂移（无单一共享 schema 契约，loader 与数据各写各的）
 - 🚩 硬约束写成空 `pass` 静默放过（资格 / 选科等必须显式 exclude）
+- 🚩 **高危领域裸奔**（医疗 / 心理 / 法律 / 金融无分级 / 免责 / 人工兜底）——ai-therapist 最危险，这类项目 L 级护栏加倍
+- 🚩 **金融未来数据泄漏**（用未来 K 线回测）/ 🚩 **全历史拟合称效果好**（过拟合）——freqtrade 示范，对应铁律"验证点显性"
+- 🚩 **凭标题判 GOOD/WEAK**（搜"AI X 生成器"就当薄壳）——必须 grep 内核 + 读关键文件再判定（ai-meal-planner/ai-real-estate 均被源码证伪）
 
 ---
 
@@ -155,6 +158,46 @@ AI **主动套用**模板 §4 的固定 6 个 phase（P1 Schema → P2 最小内
 4. **"计算/解释真分离"最简自检 = 内核文件 `grep` 不到任何 LLM import**。FitMate/CookHero/ai-travel-planner/AI-study-planner 都过不了这条。
 5. **解释层缺失比内核错更隐蔽**（AI_Portfolio_Analyzer 空壳）——验收必须把"解释层真接上"列为 Gate。
 6. **17 个里 6 个薄壳**：证明"外行靠 AI 写出来"与"写出 robust 项目"之间有方法论鸿沟，本 Skill 即填沟之用。
+
+---
+
+## 证据 v2 扩展：22 个跨领域项目（详见 `references/evidence_v2.md`）
+> 全部来自 `参考项目分析V2/` 真实克隆、逐项目读源码。22 项目中 **21 GOOD + 1 WEAK**（ai-therapist）。
+> **源码推翻搜索摘要**：ai-meal-planner、ai-real-estate 原以为 WEAK，读源码后确认 GOOD（前者 BMR+0/1 背包 DP，后者混合检索内核+Haversine）；真实薄壳仅 ai-therapist。
+
+| # | 项目 | 领域 | 确定性内核 | 判定 |
+|---|---|---|---|---|
+| 1 | private-gpt | RAG | 向量检索 | GOOD |
+| 2 | quivr | RAG | 向量检索+重排 | GOOD |
+| 3 | docsgpt | RAG | 向量检索 | GOOD |
+| 4 | langchain-chatchat | RAG | 向量检索 | GOOD |
+| 5 | ai-real-estate | 房产搜索 | 混合检索+Haversine | GOOD |
+| 6 | osrm-backend | 路由 | CH/双向Dijkstra | GOOD |
+| 7 | openfisca-core | 规则 | 立法规则图 | GOOD |
+| 8 | sympy | 符号 | 计算机代数 | GOOD |
+| 9 | music21 | 乐理 | 音程/和弦 | GOOD |
+| 10 | PyPSA | 最优化 | 能源LP/MILP | GOOD |
+| 11 | languagetool | 规则 | 语法规则 | GOOD |
+| 12 | argos-translate | 神经推理 | CTranslate2翻译 | GOOD |
+| 13 | inventree | 库存 | EOQ/数据模型 | GOOD |
+| 14 | medplum | 临床 | FHIR模型 | GOOD |
+| 15 | semgrep | 规则 | AST合一匹配 | GOOD |
+| 16 | openfoodfacts | 营养 | 查表计算 | GOOD |
+| 17 | wger | 健身 | 数据模型 | GOOD |
+| 18 | OpenBB | 金融 | 数据聚合 | GOOD |
+| 19 | freqtrade | 金融 | 回测引擎 | GOOD |
+| 20 | twenty | CRM | 领域模型 | GOOD |
+| 21 | ai-meal-planner | 营养 | BMR+背包DP | GOOD |
+| 22 | ai-therapist | 心理 | 无内核(纯LLM) | WEAK |
+
+**修正结论**：v1 的 6 个薄壳全在生活类；v2 证明真实薄壳极少（1/22）且出现在**高危领域**（医疗/心理）。反模式清单从"生活类专属警示"升级为"通用警示 + 高危领域加倍护栏"。
+
+**v2 新增关键洞见**：
+1. **源码验证 GOOD/WEAK**：GitHub 搜索摘要的"AI X 生成器"字眼系统性误导；必须 grep 内核 + 读关键文件再判定（ai-meal-planner/ai-real-estate 均被证伪为 GOOD）。
+2. **范式覆盖 9 → 14**：新增检索 / 规则引擎 / 最优化 / 符号计算 / 路由 / 神经推理 / 数据聚合 / 领域模型（见 evidence_v2.md 范式表）。
+3. **金融特例铁律**：防未来数据泄漏（严格时间隔离）、防过拟合（样本外验证）——freqtrade/OpenBB 示范。
+4. **加速是细节不是内核**：CH/MLD/向量索引/缓存都是后置优化，先让朴素版（Dijkstra / 单 pattern 匹配 / 直接查表）跑通。
+5. **内核形态图鉴**：B 类项目（osrm/openfisca/sympy/music21/PyPSA/languagetool/argos）证明"内核可以是任意硬计算，AI 只是解说员"。
 
 ---
 
@@ -205,7 +248,8 @@ AI **主动套用**模板 §4 的固定 6 个 phase（P1 Schema → P2 最小内
 
 ## 引用
 - `references/blueprint-template.md` — **固化模板**：三层骨架 + 6类陷阱 + 数据清单 + 标准 6-phase + 每 phase 四要素（AI 主动套用，勿每次问用户）
-- `references/evidence.md` — 17 项目逐源码解剖（含 GOOD/WEAK 判定与复现要点）
+- `references/evidence.md` — 17 项目逐源码解剖（v1 证据）
+- `references/evidence_v2.md` — 22 项目跨领域逐源码解剖（v2 扩展：范式表 + 红旗升级 + 修正结论）
 - `references/prompt-bank.md` — 第零步如何触发 brainstorming + A/B/C 阶段 AI 自查清单
 - `references/walkthrough.md` — 实战演练：从零做一个"张雪峰式高考志愿网页应用"（纠正"复现"方向为"从零做"）
 - 真实代码库：`D:\参考项目分析\`（17 个仓库浅克隆，逐个已读源码）
